@@ -1,0 +1,175 @@
+---
+title: "POMA: An R Package for Statistical Analysis of Metabolomic Data"
+author: "Pol Castellano-Escuder"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    toc: true
+    theme: cayman
+    highlight: github
+  pdf_document:
+    toc: true
+---
+
+# Installation
+
+```{r, eval = F}
+devtools::install_github("pcastellanoescuder/POMA", dependencies = TRUE)
+```
+
+# Load Packages
+
+```{r, message=FALSE, warning=FALSE, comment=FALSE}
+library(POMA)
+library(tidyverse)
+# library(mixOmics)
+# library(limma)
+# library(impute)
+# library(reshape2)
+```
+
+# Load Example Data
+
+```{r, message=FALSE, warning=FALSE, comment=FALSE}
+data <- vroom::vroom("MET_CRC_ST000284.csv", delim = ",")
+covariates <- vroom::vroom("COV_CRC_ST000284.csv", delim = ",")
+
+# Generate 10% of NAs to test PomaImpute() function
+
+set.seed(6)
+df <- data[, 3:ncol(data)]
+while(sum(is.na(df) == TRUE) < (nrow(df) * ncol(df) * 10/100)){
+  df[sample(nrow(df),1), sample(ncol(df),1)] <- NA
+}
+data <- cbind(data[, 1:2], df)
+```
+
+# Imputation
+
+Imputation using KNN method.
+
+```{r}
+imputed <- PomaImpute(data, ZerosAsNA = F, RemoveNA = T, cutoff = 20, method = "knn")
+```
+
+# Normalization
+
+Generation of 3 different matrix using 3 different normalization methods.
+
+```{r}
+not_norm <- PomaNorm(imputed, method = "none", round = 3)
+log_pareto <- PomaNorm(imputed, method = "log_pareto", round = 3)
+log_transformed <- PomaNorm(imputed, method = "log_transformation", round = 3)
+```
+
+## By subjects
+
+Boxplot comparisson between not normalized data and normalized data (using "log_pareto").
+
+```{r, fig.align='center', dpi=200}
+PomaNormPlot(not_norm, group = "subjects") + ggtitle("Not Normalized data")
+```
+
+```{r, fig.align='center', dpi=200}
+PomaNormPlot(log_pareto, group = "subjects") + ggtitle("Normalized data")
+```
+
+## By metabolites
+
+Boxplot comparisson between not normalized data and normalized data (using "log_pareto") groupping by metabolites.
+
+```{r, fig.align='center', dpi=200}
+PomaNormPlot(not_norm, group = "metabolites") + ggtitle("Not Normalized data")
+```
+
+```{r, fig.align='center', dpi=200}
+PomaNormPlot(log_pareto, group = "metabolites") + ggtitle("Normalized data")
+```
+
+# Univariate analysis
+
+## T-test
+
+```{r}
+univ_ttest_not_norm <- PomaUnivariate(not_norm, method = "ttest", adjust = "fdr")
+knitr::kable(head(univ_ttest_not_norm))
+```
+
+A volcano plot of the results:
+
+```{r, fig.align='center', dpi=200, message=FALSE, warning=FALSE, comment=FALSE}
+PomaVolcano(univ_ttest_not_norm, pval = "raw", FC_cutoff = 1.5)
+```
+
+## U Mann-Whitney
+
+```{r}
+univ_mann_not_norm <- PomaUnivariate(not_norm, method = "mann", adjust = "fdr")
+knitr::kable(head(univ_mann_not_norm))
+```
+
+A volcano plot of the results:
+
+```{r, fig.align='center', dpi=200, message=FALSE, warning=FALSE, comment=FALSE}
+PomaVolcano(univ_mann_not_norm, pval = "raw", FC_cutoff = 1.5)
+```
+
+# Multivariate analysis
+
+## sPLS-DA (Supervised ultivariate analysis)
+
+Sparse partial least squares discriminant analysis of log pareto normalized data.
+
+```{r, fig.align='center', dpi=200, message=FALSE, warning=FALSE, comment=FALSE}
+multiv_splsda <- PomaMultivariate(log_pareto, method = c("splsda"), components = 5,
+                                  validation = "Mfold", folds = 5, nrepeat = 10, 
+                                  num_features = 10)
+
+multiv_splsda$splsda_scores_plot
+multiv_splsda$bal_error_rate
+knitr::kable(head(multiv_splsda$scores_splsda))
+knitr::kable(head(multiv_splsda$selected_variables))
+```
+
+## PCA (Unsupervised ultivariate analysis)
+
+Principal component analysis of log pareto normalized data.
+
+```{r, fig.align='center', dpi=200, message=FALSE, warning=FALSE, comment=FALSE}
+multiv_pca <- PomaMultivariate(log_pareto, method = "pca", components = 4)
+
+multiv_pca$scoresplot
+multiv_pca$screeplot
+knitr::kable(head(multiv_pca$score_data))
+```
+
+# Limma
+
+## Limma without covariates
+
+```{r, fig.align='center', dpi=200, message=FALSE, warning=FALSE, comment=FALSE}
+limma_res <- PomaLimma(log_transformed, contrast = "C-H", adjust = "fdr")
+
+limma_res %>%
+  rownames_to_column("Metabolite") %>%
+  mutate(Fold_Change_Ratio = 2^logFC) %>%
+  column_to_rownames("Metabolite") %>%
+  PomaVolcano(pval = "raw", FC_cutoff = 1.2, xlim = 1) + ggtitle("Comparisson: Group1/Group2")
+
+knitr::kable(head(limma_res))
+```
+
+## Limma with covariates
+
+```{r, fig.align='center', dpi=200, message=FALSE, warning=FALSE, comment=FALSE}
+limma_res2 <- PomaLimma(log_transformed, covariates = covariates, contrast = "C-H", adjust = "fdr")
+
+limma_res2 %>%
+  rownames_to_column("Metabolite") %>%
+  mutate(Fold_Change_Ratio = 2^logFC) %>%
+  column_to_rownames("Metabolite") %>%
+  PomaVolcano(pval = "raw", FC_cutoff = 1.2, xlim = 1) + ggtitle("Comparisson: Group1/Group2")
+
+knitr::kable(head(limma_res2))
+```
+
