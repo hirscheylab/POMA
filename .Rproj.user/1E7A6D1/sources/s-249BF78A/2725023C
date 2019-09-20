@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1568920234602.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3059340966",
+    "id" : "2725023C",
+    "lastKnownWriteTime" : 1568920113,
+    "last_content_update" : 1568920113,
+    "path" : "~/Dropbox/DUKE/PROJECTS/POMA/R/PomaUnivariate.R",
+    "project_path" : "R/PomaUnivariate.R",
+    "properties" : {
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

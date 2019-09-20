@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1568920234011.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1850796749",
+    "id" : "158ECF65",
+    "lastKnownWriteTime" : 1568920113,
+    "last_content_update" : 1568920113,
+    "path" : "~/Dropbox/DUKE/PROJECTS/POMA/R/PomaNormPlot.R",
+    "project_path" : "R/PomaNormPlot.R",
+    "properties" : {
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

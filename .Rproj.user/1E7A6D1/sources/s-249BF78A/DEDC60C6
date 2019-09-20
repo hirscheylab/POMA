@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1568920233431.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1193143930",
+    "id" : "DEDC60C6",
+    "lastKnownWriteTime" : 1568920113,
+    "last_content_update" : 1568920113,
+    "path" : "~/Dropbox/DUKE/PROJECTS/POMA/R/PomaNorm.R",
+    "project_path" : "R/PomaNorm.R",
+    "properties" : {
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

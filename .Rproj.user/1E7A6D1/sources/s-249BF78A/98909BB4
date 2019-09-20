@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1568920235188.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2073668007",
+    "id" : "98909BB4",
+    "lastKnownWriteTime" : 1568920113,
+    "last_content_update" : 1568920113,
+    "path" : "~/Dropbox/DUKE/PROJECTS/POMA/R/PomaVolcano.R",
+    "project_path" : "R/PomaVolcano.R",
+    "properties" : {
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1568920230832.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4070496405",
+    "id" : "54BDE16",
+    "lastKnownWriteTime" : 1568920113,
+    "last_content_update" : 1568920113,
+    "path" : "~/Dropbox/DUKE/PROJECTS/POMA/R/PomaImpute.R",
+    "project_path" : "R/PomaImpute.R",
+    "properties" : {
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
